@@ -5,7 +5,7 @@ import shutil
 
 app = FastAPI()
 
-API_KEY = "your_secret_api_key_here"  # Replace with your actual API key
+API_KEY = "abc"  # Replace with your actual API key
 UPLOAD_DIR = "downloaded"
 
 # Ensure the upload directory exists
