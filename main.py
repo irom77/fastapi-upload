@@ -15,18 +15,19 @@ def verify_api_key(x_api_key: str = Header(...)):
     if x_api_key != API_KEY:
         raise HTTPException(status_code=403, detail="Invalid API Key")
 
-@app.post("/upload-csv/")
-async def upload_csv(file: UploadFile = File(...), x_api_key: str = Header(...)):
+@app.post("/upload-file/")
+async def upload_file(file: UploadFile = File(...), x_api_key: str = Header(...)):
     verify_api_key(x_api_key)
     
-    if not file.filename.endswith('.csv'):
-        return JSONResponse(status_code=400, content={"message": "File must be a CSV"})
+    if not (file.filename.endswith('.csv') or file.filename.endswith('.json')):
+        return JSONResponse(status_code=400, content={"message": "File must be a CSV or JSON"})
     
     file_location = os.path.join(UPLOAD_DIR, file.filename)
     with open(file_location, "wb+") as file_object:
         shutil.copyfileobj(file.file, file_object)
     
-    return {"message": f"CSV file '{file.filename}' uploaded successfully"}
+    file_type = "CSV" if file.filename.endswith('.csv') else "JSON"
+    return {"message": f"{file_type} file '{file.filename}' uploaded successfully"}
 
 if __name__ == "__main__":
     import uvicorn
