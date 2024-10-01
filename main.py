@@ -11,6 +11,10 @@ UPLOAD_DIR = "downloaded"
 # Ensure the upload directory exists
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
+@app.get("/")
+async def root():
+    return {"message": "Welcome to the File Upload API"}
+
 def verify_api_key(x_api_key: str = Header(...)):
     if x_api_key != API_KEY:
         raise HTTPException(status_code=403, detail="Invalid API Key")
@@ -32,3 +36,8 @@ async def upload_file(file: UploadFile = File(...), x_api_key: str = Header(...)
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
+print("FastAPI application is running. Access it at http://localhost:8000")
+print("Available endpoints:")
+print("  GET  /")
+print("  POST /upload-file/")
